@@ -11,9 +11,18 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
+    // Store Key => Value pairs for users
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        // Optional loading if there are items in the array
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
        
     }
     
@@ -71,6 +80,8 @@ class TodoListViewController: UITableViewController {
             // later on, we might want to prevent the item from going through if
             // the user typed nothing into the textfield
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "TodoListArray") // the key is going to identify this array through our user defaults
             
             self.tableView.reloadData()
         }
