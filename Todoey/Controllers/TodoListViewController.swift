@@ -7,37 +7,22 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    // Store Key => Value pairs for users
-    //let defaults = UserDefaults.standard
-    
-    // A shared file manager directory
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem  = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2  = Item()
-        newItem2.title = "Buy Eggos"
-        itemArray.append(newItem2)
-
-        let newItem3  = Item()
-        newItem3.title = "Destroy Demogorgen"
-        itemArray.append(newItem3)
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         loadItems()
         
         
-       
         
         // Optional loading if there are items in the array
 //        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
@@ -80,23 +65,10 @@ class TodoListViewController: UITableViewController {
     //MARK  - TableView Delegate Methods
     // Does something when a row is selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // print(itemArray[indexPath.row])
-        
-        //Set the property of the selected row
-//        if itemArray[indexPath.row].done == false {
-//            itemArray[indexPath.row].done = true
-//        } else {
-//            itemArray[indexPath.row].done = false
-//        }
-        
-        // A better way to set the property of a selected row
-        // Set the item array to the opposite of what it is
+ 
         itemArray[indexPath.row].done  = !itemArray[indexPath.row].done
         
         saveItems()
-        
-        // Grab a reference to the cell that is at a particular index path
-        //tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
        
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -111,15 +83,16 @@ class TodoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the add item button on our UIAlert
-        
+            
             // later on, we might want to prevent the item from going through if
             // the user typed nothing into the textfield
-            let newItem = Item()
+            let newItem = Item(context: self.context)
+            
             newItem.title = textField.text!
+            newItem.done  = false
            
             self.itemArray.append(newItem)
-//            self.defaults.set(self.itemArray, forKey: "TodoListArray") // the key is going to identify this array through our user defaults
-            
+
             self.saveItems()
         }
         
@@ -139,30 +112,30 @@ class TodoListViewController: UITableViewController {
     
     func saveItems() {
         
-        let encoder = PropertyListEncoder()
+        
         
         do{
-            let data = try  encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+           try context.save()
         } catch {
-            print("Error encoding item array, \(error)")
+            print("Error saving context \(error)")
         }
         
-        tableView.reloadData()
+        self.tableView.reloadData()
         
     }
     
+   
     //Retrieving Data
     func loadItems(){
-        if let data = try? Data(contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoding item array, \(error)")
-            }
-            
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        do{
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
         }
+       
+        
     }
     
 
