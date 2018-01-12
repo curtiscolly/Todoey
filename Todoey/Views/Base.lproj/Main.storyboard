@@ -17,12 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="1OX-bf-Die">
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="kWq-q0-K5f">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <outlet property="delegate" destination="N8n-yF-Nw3" id="7Od-Uc-iGY"/>
+                                <outlet property="delegate" destination="N8n-yF-Nw3" id="1ro-hA-gN8"/>
                             </connections>
                         </searchBar>
                         <prototypes>
