@@ -24,8 +24,6 @@ class TodoListViewController: UITableViewController {
     
         loadItems()
         
-        
-        
         // Optional loading if there are items in the array
 //        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            itemArray = items
@@ -40,8 +38,6 @@ class TodoListViewController: UITableViewController {
     
     // Method for populating cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        tableView.register(UINib(nibName: "YourCellXibName", bundle: nil), forCellReuseIdentifier: "Cell")
         
                                                  // Prototype Cell Identifier = ToDoItemCell
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
@@ -63,12 +59,9 @@ class TodoListViewController: UITableViewController {
     //MARK  - TableView Delegate Methods
     // Does something when a row is selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
- 
-//        itemArray[indexPath.row].done  = !itemArray[indexPath.row].done
         
-//        context.delete(itemArray[indexPath.row]) // deletes from temp area
-//        itemArray.remove(at: indexPath.row) // does nothing for our core data, just updates the item array
-       
+        
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         // commits to our db
         saveItems()
@@ -138,15 +131,13 @@ class TodoListViewController: UITableViewController {
             print("Error fetching data from context \(error)")
         }
        
-        
     }
     
-
-
 }
 
 
 //MARK: - Search bar methods
+
 extension TodoListViewController: UISearchBarDelegate {
     
     // Tells the delegate that the search bar was tapped
@@ -156,4 +147,5 @@ extension TodoListViewController: UISearchBarDelegate {
     }
     
 }
+ 
 
