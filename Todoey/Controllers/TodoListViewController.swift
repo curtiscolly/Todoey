@@ -18,8 +18,10 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
+      //  print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+    
+        // searchBar.delegate = self -- I added the delegate from teh storyboard, so I don't need this
+    
         loadItems()
         
         
@@ -39,6 +41,8 @@ class TodoListViewController: UITableViewController {
     // Method for populating cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        tableView.register(UINib(nibName: "YourCellXibName", bundle: nil), forCellReuseIdentifier: "Cell")
+        
                                                  // Prototype Cell Identifier = ToDoItemCell
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
@@ -51,12 +55,6 @@ class TodoListViewController: UITableViewController {
         // value = condition ? valueIfTrue : ValueIfFalse
         cell.accessoryType = item.done ? .checkmark : .none
         
-//        if item.done == true {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
-        
         return cell
     }
     
@@ -66,8 +64,13 @@ class TodoListViewController: UITableViewController {
     // Does something when a row is selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
  
-        itemArray[indexPath.row].done  = !itemArray[indexPath.row].done
+//        itemArray[indexPath.row].done  = !itemArray[indexPath.row].done
         
+//        context.delete(itemArray[indexPath.row]) // deletes from temp area
+//        itemArray.remove(at: indexPath.row) // does nothing for our core data, just updates the item array
+       
+        
+        // commits to our db
         saveItems()
        
         tableView.deselectRow(at: indexPath, animated: true)
@@ -139,13 +142,18 @@ class TodoListViewController: UITableViewController {
     }
     
 
-    
-    
-    
-    
-    
+
+}
 
 
-
+//MARK: - Search bar methods
+extension TodoListViewController: UISearchBarDelegate {
+    
+    // Tells the delegate that the search bar was tapped
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        print(searchBar.text!)
+    }
+    
 }
 
