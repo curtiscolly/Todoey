@@ -113,7 +113,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="092-Ni-fnN">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="addButtonPressed:" destination="2oc-H3-saV" id="RaU-cN-i6j"/>
+                                <action selector="addButtonPressed:" destination="2oc-H3-saV" id="Ewk-bT-DO6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
