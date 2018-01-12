@@ -17,18 +17,9 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-      //  print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-    
-        // searchBar.delegate = self -- I added the delegate from teh storyboard, so I don't need this
     
         loadItems()
-        
-        // Optional loading if there are items in the array
-//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-//            itemArray = items
-//        }
-       
+
     }
     
     //MARK - Tableview Datasource Methods
@@ -122,15 +113,16 @@ class TodoListViewController: UITableViewController {
     
    
     //Retrieving Data
-    func loadItems(){
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
+    // with = external param request = internal param   //Default Value
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest() ){
+
         do{
             itemArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context \(error)")
         }
        
+        tableView.reloadData()
     }
     
 }
@@ -143,23 +135,33 @@ extension TodoListViewController: UISearchBarDelegate {
     // Tells the delegate that the search bar was tapped
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
+       
         // [cd] = case and diacritic insensitive
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
-        request.predicate = predicate
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+        loadItems(with: request)
         
-        request.sortDescriptors = [sortDescriptor]
+    }
+    
+    // Every letter typed in initiates this method
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        do{
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
+        // If the search box has been cleared
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            
+            // Run the resign method on the main queue
+            DispatchQueue.main.async {
+                
+                // Removes the cursor from inside the search bar
+                searchBar.resignFirstResponder()
+            }
+            
+        
         }
-        
-        tableView.reloadData()
     }
     
 }
