@@ -22,17 +22,17 @@ class TodoListViewController: UITableViewController {
         
     }
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
     
-
     }
     
     //MARK - Tableview Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoItems?.count ?? 1
     }
+    
+    
     
     // Method for populating cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -59,6 +59,7 @@ class TodoListViewController: UITableViewController {
     
     
     //MARK  - TableView Delegate Methods
+    
     // Does something when a row is selected
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -192,5 +193,7 @@ extension TodoListViewController: UISearchBarDelegate {
     }
 
 }
+
+
 
 
