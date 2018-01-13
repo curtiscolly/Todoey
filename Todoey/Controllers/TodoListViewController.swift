@@ -16,7 +16,7 @@ class TodoListViewController: UITableViewController {
     var selectedCategory : Category? {
         // as soon as the selected category gets set with a value, didSet executes
         didSet{
-             loadItems()
+//             loadItems()
         }
         
     }
@@ -80,13 +80,13 @@ class TodoListViewController: UITableViewController {
             
             // later on, we might want to prevent the item from going through if
             // the user typed nothing into the textfield
-            let newItem = Item(context: self.context)
-            
-            newItem.title = textField.text!
-            newItem.done  = false
-            newItem.parentCategory = self.selectedCategory
-           
-            self.itemArray.append(newItem)
+//            let newItem = Item(context: self.context)
+//
+//            newItem.title = textField.text!
+//            newItem.done  = false
+//            newItem.parentCategory = self.selectedCategory
+//
+//            self.itemArray.append(newItem)
 
             self.saveItems()
         }
@@ -122,70 +122,70 @@ class TodoListViewController: UITableViewController {
    
     //Retrieving Data
     // with = external param request = internal param   //Default Value
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil ){
-        
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-     
-        // optional binding
-        // The bottom statement is used instead of this one:
-        // let compoundPredicate = NSCompoundPredicate(andPredicateWithSubPredicates: [categoryPredicate, predicate])
-        // request.predicate = predicate
-        if let additionalPredicate = predicate {
-            // If predicate is not nil do this
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        }else {
-            // if predicate is nil do this
-            request.predicate = categoryPredicate
-        }
-     
-        do{
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
-       
-        tableView.reloadData()
-    }
+//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil ){
+//
+//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//
+//        // optional binding
+//        // The bottom statement is used instead of this one:
+//        // let compoundPredicate = NSCompoundPredicate(andPredicateWithSubPredicates: [categoryPredicate, predicate])
+//        // request.predicate = predicate
+//        if let additionalPredicate = predicate {
+//            // If predicate is not nil do this
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+//        }else {
+//            // if predicate is nil do this
+//            request.predicate = categoryPredicate
+//        }
+//
+//        do{
+//            itemArray = try context.fetch(request)
+//        } catch {
+//            print("Error fetching data from context \(error)")
+//        }
+//
+//        tableView.reloadData()
+//    }
     
 }
 
 
 //MARK: - Search bar methods
-
-extension TodoListViewController: UISearchBarDelegate {
-    
-    // Tells the delegate that the search bar was tapped
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-       
-        // [cd] = case and diacritic insensitive
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadItems(with: request, predicate: predicate)
-        
-    }
-    
-    // Every letter typed in initiates this method
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        // If the search box has been cleared
-        if searchBar.text?.count == 0 {
-            loadItems()
-            
-            
-            // Run the resign method on the main queue
-            DispatchQueue.main.async {
-                
-                // Removes the cursor from inside the search bar
-                searchBar.resignFirstResponder()
-            }
-            
-        
-        }
-    }
-    
-}
- 
+//
+//extension TodoListViewController: UISearchBarDelegate {
+//
+//    // Tells the delegate that the search bar was tapped
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//
+//        // [cd] = case and diacritic insensitive
+//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+//
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadItems(with: request, predicate: predicate)
+//
+//    }
+//
+//    // Every letter typed in initiates this method
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//        // If the search box has been cleared
+//        if searchBar.text?.count == 0 {
+//            loadItems()
+//
+//
+//            // Run the resign method on the main queue
+//            DispatchQueue.main.async {
+//
+//                // Removes the cursor from inside the search bar
+//                searchBar.resignFirstResponder()
+//            }
+//
+//
+//        }
+//    }
+//
+//}
+//
 

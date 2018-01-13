@@ -7,9 +7,12 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
+
 
 class CategoryViewController: UITableViewController {
+    
+    let realm = try! Realm()
     
     var categoryArray = [Category]()
     
@@ -47,12 +50,14 @@ class CategoryViewController: UITableViewController {
     
     //MARK - Model Manipulation Methods
     
-    func saveCategories() {
+    func save(category: Category) {
         
         do{
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
-            print("Error saving context \(error)")
+            print("Error saving \(error)")
         }
         
         self.tableView.reloadData()
@@ -62,15 +67,17 @@ class CategoryViewController: UITableViewController {
     
     //Retrieving Data
     // with = external param request = internal param   //Default Value
-    func loadCategories(with request: NSFetchRequest<Category> = Category.fetchRequest() ){
+    func loadCategories(){
         
-        do{
-            categoryArray = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
+//        let request : NSFetchRequest<Category> = Category.fetchRequest()
         
-        tableView.reloadData()
+//        do{
+//            categoryArray = try context.fetch(request)
+//        } catch {
+//            print("Error fetching data from context \(error)")
+//        }
+        
+//        tableView.reloadData()
     }
 
     //MARK: - Add New Categories
@@ -86,15 +93,17 @@ class CategoryViewController: UITableViewController {
 
             // later on, we might want to prevent the item from going through if
             // the user typed nothing into the textfield
-            let newCategory = Category(context: self.context)
+            let newCategory = Category()
 
             newCategory.name = textField.text!
 
             self.categoryArray.append(newCategory)
 
-            self.saveCategories()
+            self.save(category: newCategory)
            
         }
+        
+        alert.addAction(action)
         
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new category"
@@ -102,8 +111,7 @@ class CategoryViewController: UITableViewController {
 
         }
 
-        alert.addAction(action)
-
+    
         present(alert, animated: true, completion: nil)
 
     
