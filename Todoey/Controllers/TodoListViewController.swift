@@ -65,8 +65,8 @@ class TodoListViewController: UITableViewController {
         if let item  = todoItems?[indexPath.row]{
             do{
                 try realm.write {
-//                    item.done = !item.done
-                    realm.delete(item)
+                    item.done = !item.done
+//                    realm.delete(item)
                 }
             } catch {
                 print("Error saving done status, \(error)")
@@ -100,6 +100,7 @@ class TodoListViewController: UITableViewController {
                 try self.realm.write {
                     let newItem = Item()
                     newItem.title = textField.text!
+                    newItem.dateCreated = Date()
                     currentCategory.items.append(newItem) // append the new item to this category
                 }
                 } catch {
@@ -159,20 +160,16 @@ class TodoListViewController: UITableViewController {
 
 
 //MARK: - Search bar methods
-
+//
 extension TodoListViewController: UISearchBarDelegate {
 
     // Tells the delegate that the search bar was tapped
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-
-        // [cd] = case and diacritic insensitive
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-
-        loadItems(with: request, predicate: predicate)
-
+        
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        
+        tableView.reloadData()
+        
     }
 
     // Every letter typed in initiates this method
