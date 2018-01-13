@@ -14,12 +14,7 @@ class CategoryViewController: UITableViewController {
     
     let realm = try! Realm()
     
-    var categoryArray = [Category]()
-    
-    
-    // Handles CRUD operations
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+    var categories: Results<Category>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +26,7 @@ class CategoryViewController: UITableViewController {
     
     //MARK - Tableview Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     // Method for populating cells
@@ -40,10 +35,7 @@ class CategoryViewController: UITableViewController {
         // Prototype Cell Identifier = CategoryCell
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        let category = categoryArray[indexPath.row]
-        
-        // Labeling the cell with the items from the array
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Selected Yet"
         
         return cell
     }
@@ -69,15 +61,9 @@ class CategoryViewController: UITableViewController {
     // with = external param request = internal param   //Default Value
     func loadCategories(){
         
-//        let request : NSFetchRequest<Category> = Category.fetchRequest()
+        categories  = realm.objects(Category.self)
         
-//        do{
-//            categoryArray = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
-        
-//        tableView.reloadData()
+        tableView.reloadData()
     }
 
     //MARK: - Add New Categories
@@ -96,9 +82,7 @@ class CategoryViewController: UITableViewController {
             let newCategory = Category()
 
             newCategory.name = textField.text!
-
-            self.categoryArray.append(newCategory)
-
+            
             self.save(category: newCategory)
            
         }
@@ -129,7 +113,7 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
  
