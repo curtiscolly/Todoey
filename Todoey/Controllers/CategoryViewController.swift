@@ -52,7 +52,7 @@ class CategoryViewController: UITableViewController {
             print("Error saving \(error)")
         }
         
-        self.tableView.reloadData()
+        self.tableView.reloadData() // Calls all tableView methods again
         
     }
     
