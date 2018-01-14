@@ -41,33 +41,51 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
 
-        if let colorHex = selectedCategory?.color {
-            
-            title = selectedCategory!.name
-            
-            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
-            
-            if let navBarColor = UIColor(hexString: colorHex) {
-                
-                navBar.barTintColor = navBarColor
-                
-                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
-                
-                if #available(iOS 11.0, *) { //<-- this is only available on later versions of iOS
-                    navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true) ]
-                } else {
-                    // Fallback on earlier versions
-                }
-                
-                searchBar.barTintColor = navBarColor
-                
-            }
-            
-        }
+      
+        
         
     }
     
-    //MARK - Tableview Datasource Methods
+    override func viewWillDisappear(_ animated: Bool) {
+        guard let originalColor = UIColor(hexString: "1D9BF6") else { fatalError() }
+        navigationController?.navigationBar.barTintColor = originalColor
+        navigationController?.navigationBar.tintColor = FlatWhite()
+        if #available(iOS 11.0, *) {
+            navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : FlatWhite()]
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    //MARK: - Nav Bar Setup Methods
+    func updateNavBar(withHexCode colorHexCode: String){
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
+        
+        
+        guard let colorHexCode = selectedCategory?.color else { fatalError() }
+        
+        title = selectedCategory?.name
+        
+        guard let navBarColor = UIColor(hexString: colorHexCode) else { fatalError() }
+        
+        
+        navBar.barTintColor = navBarColor
+        
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        
+        if #available(iOS 11.0, *) { //<-- this is only available on later versions of iOS
+            navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true) ]
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        searchBar.barTintColor = navBarColor
+    }
+    
+    
+    
+    
+    //MARK: - Tableview Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoItems?.count ?? 1
     }
