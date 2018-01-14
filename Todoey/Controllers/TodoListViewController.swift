@@ -15,6 +15,9 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    
     var selectedCategory : Category? {
         // as soon as the selected category gets set with a value, didSet executes
         didSet{
@@ -30,11 +33,38 @@ class TodoListViewController: SwipeTableViewController {
         
         tableView.separatorStyle = .none
         
-        if let colorHex = selectedCategory?.color {
-            navigationController?.navigationBar.barTintColor = UIColor(hexString: colorHex)
-        }
+       
         
     
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+
+        if let colorHex = selectedCategory?.color {
+            
+            title = selectedCategory!.name
+            
+            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
+            
+            if let navBarColor = UIColor(hexString: colorHex) {
+                
+                navBar.barTintColor = navBarColor
+                
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                
+                if #available(iOS 11.0, *) { //<-- this is only available on later versions of iOS
+                    navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true) ]
+                } else {
+                    // Fallback on earlier versions
+                }
+                
+                searchBar.barTintColor = navBarColor
+                
+            }
+            
+        }
+        
     }
     
     //MARK - Tableview Datasource Methods

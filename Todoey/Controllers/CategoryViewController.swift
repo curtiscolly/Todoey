@@ -26,7 +26,7 @@ class CategoryViewController: SwipeTableViewController {
         tableView.separatorStyle = .none
         
         
-        print("Realm location is \(Realm.Configuration.defaultConfiguration.fileURL)")
+        print("Realm location is \(String(describing: Realm.Configuration.defaultConfiguration.fileURL))")
        
 
     }

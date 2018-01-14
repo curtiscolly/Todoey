@@ -42,13 +42,13 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Items" id="YUK-Ja-6hq">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="toK-4Y-rzG">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="N8n-yF-Nw3" id="cRI-5W-y0H"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBar" destination="kWq-q0-K5f" id="zht-RI-WkA"/>
                         <outlet property="searchDisplayController" destination="cOo-jl-HkD" id="4Ku-tK-UNG"/>
                     </connections>
                 </tableViewController>
