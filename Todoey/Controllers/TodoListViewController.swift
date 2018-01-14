@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems: Results<Item>?
     let realm = try! Realm()
@@ -24,6 +24,8 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = 80.0
     
     }
     
@@ -33,22 +35,20 @@ class TodoListViewController: UITableViewController {
     }
     
     
-    
     // Method for populating cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-                                                 // Prototype Cell Identifier = ToDoItemCell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+    
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
-            
+
             // Labeling the cell with the items from the array
             cell.textLabel?.text = item.title
-            
+
             //Ternary operator
             // value = condition ? valueIfTrue : ValueIfFalse
             cell.accessoryType = item.done ? .checkmark : .none
-            
+
         } else {
             cell.textLabel?.text = "No Items Added"
         }
@@ -76,7 +76,7 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
         
 //        todoItems[indexPath.row].done = !todoItems[indexPath.row].done
-//
+
 //        // commits to our db
 //        saveItems()
        
@@ -134,27 +134,23 @@ class TodoListViewController: UITableViewController {
         
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        // optional binding
-//        // The bottom statement is used instead of this one:
-//        // let compoundPredicate = NSCompoundPredicate(andPredicateWithSubPredicates: [categoryPredicate, predicate])
-//        // request.predicate = predicate
-//        if let additionalPredicate = predicate {
-//            // If predicate is not nil do this
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-//        }else {
-//            // if predicate is nil do this
-//            request.predicate = categoryPredicate
-//        }
-//
-//        do{
-//            itemArray = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
-
         tableView.reloadData()
+    }
+    
+    //MARK: - Delete Data From Swipe
+    override func updateModel(at indexPath: IndexPath) {
+       
+        if let item  = todoItems?[indexPath.row]{
+            do{
+                try realm.write {
+            
+                    realm.delete(item)
+                }
+            } catch {
+                print("Error saving done status, \(error)")
+            }
+        }
+        
     }
     
 }

@@ -11,5 +11,6 @@ import RealmSwift
 
 class Category: Object {
     @objc dynamic var name: String = "" // dynamic means we can monitor this variable during runtime
+    @objc dynamic var color: String = ""
     let items = List<Item>() // One to Many relationship, each category will have a list of items
 }
