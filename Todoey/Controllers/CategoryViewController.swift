@@ -24,6 +24,9 @@ class CategoryViewController: SwipeTableViewController {
         tableView.rowHeight = 80.0
         
         tableView.separatorStyle = .none
+        
+        
+        print("Realm location is \(Realm.Configuration.defaultConfiguration.fileURL)")
        
 
     }
@@ -40,13 +43,10 @@ class CategoryViewController: SwipeTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added"
- 
-        
-        cell.backgroundColor = UIColor.randomFlat
-        
-        ///cell.backgroundColor = UIColor.randomFlat.hexValue()
-        //cell.backgroundColor = UIColor(hexString: String)
-        
+
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "00ACFF")
+
+       
         return cell
     }
     
@@ -108,6 +108,8 @@ class CategoryViewController: SwipeTableViewController {
             let newCategory = Category()
 
             newCategory.name = textField.text!
+            
+            newCategory.color = UIColor.randomFlat.hexValue()
             
             self.save(category: newCategory)
            
